@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>4 Dishes Grid</title>
+<style>
+.grid-container {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr; /* Dish 1 wider */
+  grid-template-rows: auto auto;
+  gap: 10px;
+  padding: 10px;
+  max-width: 600px;
+}
+
+.grid-item {
+  background-color: #f0f0f0;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+.grid-item img {
+  max-width: 100%;
+  height: 101%;
+  display: block;
+  margin: 10px auto;
+}
+
+.grid-item.dish1 {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+}
+
+.grid-item.dish2 {
+  grid-column: 2 / 3;
+  grid-row: 1 / 3;
+}
+
+.grid-item.dish3 {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+}
+
+.grid-item.dish4 {
+  grid-column: 3 / 4;
+  grid-row: 2 / 3;
+}
+</style>
+</head>
+<body>
+
+<div class="grid-container">
+  <div class="grid-item dish1">
+   
+    <img src="1.jpeg" alt="Dish 1 Image">
+  </div>
+  <div class="grid-item dish2">
+ 
+    <img src="2.jpeg" alt="Dish 2 Image">
+  </div>
+  <div class="grid-item dish3">
+    
+    <img src="4.jpeg" alt="Dish 3 Image">
+  </div>
+  <div class="grid-item dish4">
+    
+    <img src="3.jpeg" alt="Dish 4 Image">
+  </div>
+</div>
+
+</body>
+</html>
