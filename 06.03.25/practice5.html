@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+    <h1>Image gallery</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Gallery</title>
+    <style>
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+        }
+
+        .overlay.active {
+            display: flex;
+        }
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="gallery">
+        <div class="gallery-item" data-src="image1-large.jpg">
+            <img src="image1-small.jpg" alt="Project 1">
+        </div>
+        <div class="gallery-item" data-src="image2-large.jpg">
+            <img src="image1-small.jpg" alt="Project 2">
+        </div>
+        <div class="gallery-item" data-src="image3-large.jpg">
+            <img src="image1-small.jpg" alt="Project 3">
+        </div>
+        <div class="gallery-item" data-src="image4-large.jpg">
+            <img src="image1-small.jpg" alt="Project 4">
+        </div>
+        <div class="gallery-item" data-src="image5-large.jpg">
+            <img src="image1-small.jpg" alt="Project 5">
+        </div>
+        <div class="gallery-item" data-src="image6-large.jpg">
+            <img src="image1-small.jpg" alt="Project 6">
+        </div>
+
+    </div>
+
+    <div class="overlay">
+        <span class="close-button">&times;</span>
+        <img src="" alt="Large Image">
+    </div>
+
+    <script>
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const overlay = document.querySelector('.overlay');
+        const overlayImage = overlay.querySelector('img');
+        const closeButton = overlay.querySelector('.close-button');
+
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const largeImageSrc = item.getAttribute('data-src');
+                overlayImage.src = largeImageSrc;
+                overlay.classList.add('active');
+            });
+        });
+
+        closeButton.addEventListener('click', () => {
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', (event) => {
+            if (event.target === overlay) {
+                overlay.classList.remove('active');
+            }
+        });
+
+    </script>
+</body>
+</html>
