@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <style>
+        .list-container {
+            width: 300px;
+            min-height: 200px;
+            background-color:purple;
+            padding: 10px;
+        }
+        .list-item {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .list-foot {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="list-container">
+        <div class="list-header">
+            <input type="text" id="task-input"/>
+            <button onclick="addNewTask()">Add task</button>
+        </div>
+        <div class="list-body"></div>
+        <div class="list-foot">
+            <p>Pending: <span id="pending-count">0</span></p>
+            <button onclick="reset()">Clear All</button>
+        </div>
+    </div>
+    <script>
+        const obj = document.getElementById('task-input');
+        const obj1 = document.getElementsByClassName('list-body')[0];
+        const pendingCounter = document.getElementById('pending-count');
+        const tasks = [];
+
+        function addNewTask() {
+            if (obj.value.trim() !== "") {
+                tasks.push({ text: obj.value, completed: false });
+                obj.value = "";
+                render();
+            }
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            render();
+        }
+
+        function reset() {
+            tasks.length = 0;
+            render();
+        }
+
+        function taskover(index) {
+            tasks[index].completed = !tasks[index].completed;
+            render();
+        }
+
+        function pendingCount() {
+            const pendingTasks = tasks.filter(task => !task.completed).length;
+            pendingCounter.textContent = pendingTasks;
+        }
+
+        function render() {
+            let htmlData = '';
+            for (let i = tasks.length - 1; i >= 0; i--) {
+                htmlData += `
+                <div class="list-item">
+                    <input type="checkbox" ${tasks[i].completed ? "checked" : ""} onclick="taskover(${i})"/>
+                    <p style="text-decoration: ${tasks[i].completed ? 'line-through' : 'none'}">${tasks[i].text}</p>
+                    <button onclick="deleteTask(${i})">X</button>
+                </div>`;
+            }
+            obj1.innerHTML = htmlData;
+            pendingCount();
+        }
+    </script>
+</body>
+</html>
