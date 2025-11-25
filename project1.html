@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Expense Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .balance {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .balance h3 {
+      margin: 0;
+      color: #333;
+    }
+
+    .balance p {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    .income-expense {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .income, .expense {
+      width: 48%;
+      background-color: #f2f2f2;
+      text-align: center;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .income p {
+      color: green;
+      margin: 0;
+    }
+
+    .expense p {
+      color: red;
+      margin: 0;
+    }
+
+    h3 {
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    input, select {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+
+    li {
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-left: 5px solid;
+      margin-bottom: 8px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    li.income {
+      border-color: green;
+    }
+
+    li.expense {
+      border-color: red;
+    }
+
+    .delete-btn {
+      background-color: transparent;
+      border: none;
+      color: #dc3545;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+
+    .details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .date {
+      font-size: 0.85em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>💰 Personal Expense Tracker</h2>
+
+    <div class="balance">
+      <h3>Your Balance</h3>
+      <p id="balance">$0.00</p>
+    </div>
+
+    <div class="income-expense">
+      <div class="income">
+        <h4>Income</h4>
+        <p id="income">+$0.00</p>
+      </div>
+      <div class="expense">
+        <h4>Expense</h4>
+        <p id="expense">-$0.00</p>
+      </div>
+    </div>
+
+    <h3>History</h3>
+    <ul id="history-list"></ul>
+
+    <h3>Add New Transaction</h3>
+    <form id="expense-form">
+      <div class="form-group">
+        <label for="expense-name">Expense Name</label>
+        <input type="text" id="expense-name" placeholder="Enter expense name..." required />
+      </div>
+
+      <div class="form-group">
+        <label for="expense-amount">Amount</label>
+        <input type="number" id="expense-amount" placeholder="Enter amount (+ for income, - for expense)" required />
+      </div>
+
+      <div class="form-group">
+        <label for="expense-category">Category</label>
+        <select id="expense-category" required>
+          <option value="">Select category</option>
+          <option value="food">Food</option>
+          <option value="transport">Transport</option>
+          <option value="shopping">Shopping</option>
+          <option value="salary">Salary</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="expense-date">Date</label>
+        <input type="date" id="expense-date" required />
+      </div>
+
+      <button type="submit">➕ Add Transaction</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('expense-form');
+    const balanceEl = document.getElementById('balance');
+    const incomeEl = document.getElementById('income');
+    const expenseEl = document.getElementById('expense');
+    const historyList = document.getElementById('history-list');
+
+    let transactions = [];
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('expense-name').value.trim();
+      const amount = parseFloat(document.getElementById('expense-amount').value);
+      const category = document.getElementById('expense-category').value;
+      const date = document.getElementById('expense-date').value;
+
+      if (!name || isNaN(amount) || !category || !date) {
+        alert('Please fill out all fields correctly.');
+        return;
+      }
+
+      const transaction = {
+        id: Date.now(),
+        name,
+        amount,
+        category,
+        date
+      };
+
+      transactions.push(transaction);
+      updateUI();
+      form.reset();
+    });
+
+    function deleteTransaction(id) {
+      transactions = transactions.filter(t => t.id !== id);
+      updateUI();
+    }
+
+    function formatCurrency(value) {
+      return value.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      });
+    }
+
+    function updateUI() {
+      const income = transactions
+        .filter(t => t.amount > 0)
+        .reduce((acc, t) => acc + t.amount, 0);
+
+      const expense = transactions
+        .filter(t => t.amount < 0)
+        .reduce((acc, t) => acc + t.amount, 0);
+
+      const balance = income + expense;
+
+      incomeEl.textContent = `+${formatCurrency(income)}`;
+      expenseEl.textContent = `-${formatCurrency(Math.abs(expense))}`;
+      balanceEl.textContent = formatCurrency(balance);
+
+      // Update history
+      historyList.innerHTML = '';
+
+      transactions.forEach(t => {
+        const li = document.createElement('li');
+        li.classList.add(t.amount > 0 ? 'income' : 'expense');
+        li.innerHTML = `
+          <div class="details">
+            <span><strong>${t.name}</strong> (${t.category})</span>
+            <span class="date">${t.date}</span>
+          </div>
+          <div>
+            <span>${t.amount > 0 ? '+' : ''}${formatCurrency(t.amount)}</span>
+            <button class="delete-btn" onclick="deleteTransaction(${t.id})">❌</button>
+          </div>
+        `;
+        historyList.appendChild(li);
+      });
+    }
+  </script>
+
+</body>
+</html>
